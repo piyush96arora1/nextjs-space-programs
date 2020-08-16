@@ -31,11 +31,6 @@ To run on local in project directory:
 ### ScreenShots
 ![Desktop](https://github.com/piyush96arora1/nextjs-space-programs/blob/master/public/Desktop.png)
 
-######################################################################################################################
-
 ![Mobile](https://github.com/piyush96arora1/nextjs-space-programs/blob/master/public/Mobile.png)
-
-######################################################################################################################
-
 
 ![Tablet](https://github.com/piyush96arora1/nextjs-space-programs/blob/master/public/Tablet.png)
