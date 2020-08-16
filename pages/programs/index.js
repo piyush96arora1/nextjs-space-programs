@@ -101,13 +101,13 @@ const Programs = ({ req, data, error }) => {
           Something went wrong.
         </div>
       )}
-        {!pageLoading && !hasError&& items.length===0&&(
+        {!pageLoading && !hasError&&items&& items.length===0&&(
         <div className={utilStyles.loader}>
          No programs found.
         </div>
       )}
       <div className={utilStyles.gridContainer}>
-        {!pageLoading &&
+        {!pageLoading &&items&&
           items.map((item) => {
             const { title, image, flightNo ,launchYear} = getProgramData(item);
             return (

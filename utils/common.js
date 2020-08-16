@@ -7,15 +7,17 @@ export const getData = async ({
   selectedLaunch,
 }) => {
   try {
-    let url = "https://api.spacexdata.com/v3/launches?limit=100";
+    let url = "https://api.spacexdata.com/v3/launches?limit=1";
     if (selectedLand != null) url = url + `&land_success=${selectedLand}`;
     if (selectedYear) url = url + `&launch_year=${selectedYear}`;
     if (selectedLaunch != null) url = url + `&launch_success=${selectedLaunch}`;
 
     const res = await Axios.get(url);
+    if(res&&res.data)
     return { data: res.data, error: null };
+    else throw new Error();
   } catch (error) {
-    return { error: true };
+    return { error: true,data:null };
   }
 };
 export function useDidUpdateEffect(fn, inputs) {
