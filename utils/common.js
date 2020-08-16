@@ -7,7 +7,7 @@ export const getData = async ({
   selectedLaunch,
 }) => {
   try {
-    let url = "https://api.spacexdata.com/v3/launches?limit=1";
+    let url = "https://api.spacexdata.com/v3/launches?limit=100";
     if (selectedLand != null) url = url + `&land_success=${selectedLand}`;
     if (selectedYear) url = url + `&launch_year=${selectedYear}`;
     if (selectedLaunch != null) url = url + `&launch_success=${selectedLaunch}`;

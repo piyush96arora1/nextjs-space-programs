@@ -6,8 +6,7 @@ const queryString = require("query-string");
 import utilStyles from "../../styles/utils.module.css";
 const { default: Filters } = require("../../components/Filters");
 import Loader from "react-loader-spinner";
-import Head from 'next/head'
-
+import Head from "next/head";
 
 const Programs = ({ req, data, error }) => {
   const router = useRouter();
@@ -29,15 +28,17 @@ const Programs = ({ req, data, error }) => {
         selectedLaunch,
         selectedYear,
       });
-      console.log("data", data);
       setData(data);
       setPageLoading(false);
-      if(error) setHasError(true);
+      if (error) setHasError(true);
     };
     if (
       selectedLand != null ||
       selectedLaunch != null ||
-      selectedYear != null||(selectedLand===null&&selectedYear===null&&selectedLaunch===null)
+      selectedYear != null ||
+      (selectedLand === null &&
+        selectedYear === null &&
+        selectedLaunch === null)
     ) {
       const val = getSearchVal({ selectedLand, selectedLaunch, selectedYear });
       router.push(`/programs${val}`, undefined, { shallow: true });
@@ -47,81 +48,79 @@ const Programs = ({ req, data, error }) => {
 
   return (
     <React.Fragment>
-            <Head>
+      <Head>
         <title>SpaceX Programs</title>
         <meta name="description" content="Space programs with their details" />
-        <meta name="og:description" content="Space programs with their details" />
-        <meta name="og:title" content="SpaceX Programs"/>
+        <meta
+          name="og:description"
+          content="Space programs with their details"
+        />
+        <meta name="og:title" content="SpaceX Programs" />
       </Head>
- 
-    <span className={utilStyles.headingBig}>SpaceX Launch Programs</span>
-    <div className={utilStyles.rootContainer}>
-      <div className={utilStyles.filterSection}>
-        <div className={utilStyles.headingFilter}>Filters</div>
-        <div>
-          <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>Launch Year</span>
-          <section className={utilStyles.filterContainer}>
-            <Filters
-              selected={selectedYear}
-              type="years"
-              setSelectedYear={setSelectedYear}
-            />
-          </section>
-        </div>
-        <div>
-          <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>Successful Land</span>
-          <section className={utilStyles.filterContainer}>
-            <Filters
-              selected={selectedLand}
-              type="land"
-              setSelectedLand={setSelectedLand}
-            />
-          </section>
-        </div>
-        <div>
-          <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>Successful Launch</span>
 
-          <section className={utilStyles.filterContainer}>
-            {" "}
-            <Filters
-              selected={selectedLaunch}
-              type="launch"
-              setSelectedLaunch={setSelectedLaunch}
-            />
-          </section>
-        </div>
-      </div>
-      {pageLoading && !hasError&& (
-        <div className={utilStyles.loader}>
-          <Loader type="Puff" color="#7cba01" height={100} width={100} />
-        </div>
-      )}
-       {  hasError&& (
-        <div className={utilStyles.loader}>
-          Something went wrong.
-        </div>
-      )}
-        {!pageLoading && !hasError&&items&& items.length===0&&(
-        <div className={utilStyles.loader}>
-         No programs found.
-        </div>
-      )}
-      <div className={utilStyles.gridContainer}>
-        {!pageLoading &&items&&
-          items.map((item) => {
-            const { title, image, flightNo ,launchYear} = getProgramData(item);
-            return (
-              <ProgramCard
-                key={flightNo}
-                flightNo={flightNo}
-                title={title}
-                image={image}
-                launchYear={launchYear}
+      <span className={utilStyles.headingBig}>SpaceX Launch Programs</span>
+      <div className={utilStyles.rootContainer}>
+        <div className={utilStyles.filterSection}>
+          <div className={utilStyles.headingFilter}>Filters</div>
+          <div>
+            <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>
+              Launch Year
+            </span>
+            <section className={utilStyles.filterContainer}>
+              <Filters
+                selected={selectedYear}
+                type="years"
+                setSelectedYear={setSelectedYear}
               />
-            );
-          })}
+            </section>
+          </div>
+          <div>
+            <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>
+              Successful Land
+            </span>
+            <section className={utilStyles.filterContainer}>
+              <Filters
+                selected={selectedLand}
+                type="land"
+                setSelectedLand={setSelectedLand}
+              />
+            </section>
+          </div>
+          <div>
+            <span className={`${utilStyles.center} ${utilStyles.headingLight}`}>
+              Successful Launch
+            </span>
+
+            <section className={utilStyles.filterContainer}>
+              {" "}
+              <Filters
+                selected={selectedLaunch}
+                type="launch"
+                setSelectedLaunch={setSelectedLaunch}
+              />
+            </section>
+          </div>
+        </div>
+        {pageLoading && !hasError && (
+          <div className={utilStyles.loader}>
+            <Loader type="Puff" color="#7cba01" height={100} width={100} />
+          </div>
+        )}
+        {hasError && (
+          <div className={utilStyles.loader}>Something went wrong.</div>
+        )}
+        {!pageLoading && !hasError && items && items.length === 0 && (
+          <div className={utilStyles.loader}>No programs found.</div>
+        )}
+        <div className={utilStyles.gridContainer}>
+          {!pageLoading &&
+            items &&
+            items.map((item, index) => {
+              const obj = getProgramData(item);
+              return <ProgramCard key={index} {...obj} />;
+            })}
+        </div>
       </div>
-    </div>
     </React.Fragment>
   );
 };
@@ -163,22 +162,32 @@ const getInitialState = (query) => {
   };
   if (query.selectedYear)
     initialState.selectedYear = Number(query.selectedYear);
-  if (query.selectedLand != null && query.selectedLand!=undefined)
+  if (query.selectedLand != null && query.selectedLand != undefined)
     initialState.selectedLand = JSON.parse(query.selectedLand);
-  if (query.selectedLaunch != null&& query.selectedLaunch!=undefined)
+  if (query.selectedLaunch != null && query.selectedLaunch != undefined)
     initialState.selectedLaunch = JSON.parse(query.selectedLaunch);
   return initialState;
 };
 
 const getProgramData = (obj) => {
   let item = {};
-  const { links: { mission_patch_small } = {}, mission_name, flight_number,launch_year } =
-    obj || {};
+  const {
+    links: { mission_patch_small } = {},
+    rocket: { first_stage: { cores } = {} } = {},
+    mission_name,
+    flight_number,
+    launch_year,
+    mission_id,
+    launch_success,
+  } = obj || {};
   try {
     item.image = mission_patch_small;
     item.title = mission_name;
     item.flightNo = flight_number;
-    item.launchYear=launch_year;
+    item.launchYear = launch_year;
+    item.missionId = mission_id || [];
+    item.launchSuccess = launch_success;
+    if (cores && cores[0]) item.landSuccess = cores[0].land_success;
     return item;
   } catch (error) {
     return {};
